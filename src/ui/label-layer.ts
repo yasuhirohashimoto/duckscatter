@@ -182,6 +182,12 @@ export class LabelLayer {
     }
 
     const fontSize = this.labelFontSize;
+    // fontSize <= 0（ラベル非表示）のときは描画も当たり判定も行わない。canvas は冒頭でクリア済み、
+    // renderedLabelBounds も空にリセット済みなので、ここで return すれば hit-test 対象が残らない。
+    // （従来は 0px で描画されず見えないが当たり矩形だけ残り、非表示ラベルがクリックできてしまっていた）
+    if (fontSize <= 0) {
+      return;
+    }
     this.labelContext.fillStyle = 'white';
     this.labelContext.strokeStyle = 'black';
     this.labelContext.lineWidth = 2;
